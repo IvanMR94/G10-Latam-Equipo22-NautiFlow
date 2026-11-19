@@ -98,6 +98,94 @@ const FALLBACK_EXPERIENCES: ExperienceReview[] = [
   },
 ];
 
+function demoDate(daysAhead: number, hour: number): string {
+  const date = new Date();
+  date.setDate(date.getDate() + daysAhead);
+  date.setHours(hour, 0, 0, 0);
+  return date.toISOString();
+}
+
+const DEMO_BOATS: PublicBoat[] = [
+  {
+    id: 'demo-brisas',
+    nombre: 'Brisa del Delta',
+    capacidad: 8,
+    descripcion: 'Salidas diarias desde Tigre con cubierta, sombra y seguro incluido.',
+    propietario: { whatsappPhone: null, user: { name: 'Carlos Ramírez' } },
+    zonas: [{ zona: { id: 'zona-tigre', nombre: 'Delta del Tigre' } }],
+    rating: { average: 5, total: 12 },
+    reviews: [
+      {
+        rating: 5,
+        comment: 'Excelente paseo, muy buen trato y la lancha impecable.',
+        createdAt: demoDate(-4, 16),
+      },
+      {
+        rating: 5,
+        comment: 'Puntuales y seguros, repetimos sin dudarlo.',
+        createdAt: demoDate(-12, 11),
+      },
+    ],
+  },
+  {
+    id: 'demo-sereno',
+    nombre: 'Río Sereno',
+    capacidad: 6,
+    descripcion: 'Recorridos tranquilos por los canales del Delta, ideal para familias.',
+    propietario: { whatsappPhone: null, user: { name: 'María Gómez' } },
+    zonas: [{ zona: { id: 'zona-escobar', nombre: 'Escobar' } }],
+    rating: { average: 4.8, total: 9 },
+    reviews: [
+      {
+        rating: 5,
+        comment: 'Viaje cómodo, seguro y con muy buena atención durante todo el recorrido.',
+        createdAt: demoDate(-7, 14),
+      },
+      {
+        rating: 4,
+        comment: 'Muy buena experiencia, volveríamos a salir con ellos.',
+        createdAt: demoDate(-20, 10),
+      },
+    ],
+  },
+  {
+    id: 'demo-pampero',
+    nombre: 'Pampero',
+    capacidad: 10,
+    descripcion: 'Lancha amplia para grupos y eventos privados en el Delta.',
+    propietario: { whatsappPhone: null, user: { name: 'Lucas Ferreyra' } },
+    zonas: [{ zona: { id: 'zona-san-isidro', nombre: 'San Isidro' } }],
+    rating: { average: 4.9, total: 15 },
+    reviews: [
+      {
+        rating: 5,
+        comment: 'Coordinación rápida y transparente desde el primer contacto.',
+        createdAt: demoDate(-2, 18),
+      },
+      {
+        rating: 5,
+        comment: 'Gran lancha y excelente onda del operador. Súper recomendable.',
+        createdAt: demoDate(-15, 12),
+      },
+    ],
+  },
+];
+
+const DEMO_TRIPS: Record<string, UpcomingTrip[]> = {
+  'Carlos Ramírez': [
+    { fechaSalida: demoDate(1, 10), estado: 'PROGRAMADA' },
+    { fechaSalida: demoDate(3, 16), estado: 'PROGRAMADA' },
+  ],
+  'María Gómez': [
+    { fechaSalida: demoDate(2, 9), estado: 'PROGRAMADA' },
+    { fechaSalida: demoDate(5, 15), estado: 'PROGRAMADA' },
+  ],
+  'Lucas Ferreyra': [
+    { fechaSalida: demoDate(4, 11), estado: 'PROGRAMADA' },
+    { fechaSalida: demoDate(6, 17), estado: 'PROGRAMADA' },
+  ],
+};
+
 function scrollToSection(sectionId: string) {
   const element = document.getElementById(sectionId);
   if (element) {
@@ -112,6 +200,32 @@ function shuffle<T>(items: T[]): T[] {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
+}
+
+function indexBoatsWithReviews(boats: PublicBoat[]): {
+  byBoat: Record<string, ExperienceReview[]>;
+  collected: ExperienceReview[];
+} {
+  const collected: ExperienceReview[] = [];
+  const byBoat: Record<string, ExperienceReview[]> = {};
+  for (const boat of boats) {
+    if (!Array.isArray(boat.reviews)) continue;
+    const boatReviews: ExperienceReview[] = [];
+    for (const rev of boat.reviews) {
+      if (!rev.comment) continue;
+      const item: ExperienceReview = {
+        id: `${boat.id}-${rev.createdAt}`,
+        rating: rev.rating,
+        comment: rev.comment,
+        boatName: boat.nombre,
+        createdAt: rev.createdAt,
+      };
+      boatReviews.push(item);
+      collected.push(item);
+    }
+    if (boatReviews.length > 0) byBoat[boat.id] = boatReviews;
+  }
+  return { byBoat, collected };
 }
 
 function ActionLink({
@@ -367,7 +481,6 @@ export function LandingPage() {
   const location = useLocation();
   const [boats, setBoats] = useState<PublicBoat[]>([]);
   const [loadingBoats, setLoadingBoats] = useState(true);
-  const [boatsError, setBoatsError] = useState(false);
   const [experiences, setExperiences] = useState<ExperienceReview[]>(FALLBACK_EXPERIENCES);
   const [tripsByOperator, setTripsByOperator] = useState<Record<string, UpcomingTrip[]>>({});
   const [reviewsByBoat, setReviewsByBoat] = useState<Record<string, ExperienceReview[]>>({});
@@ -380,12 +493,14 @@ export function LandingPage() {
     let active = true;
 
     Promise.all([
-      api.get<PublicBoatPage>('/public/boats?limit=24'),
+      api.get<PublicBoatPage>('/public/boats?limit=24', {
+        signal: AbortSignal.timeout(8000),
+      }),
       api
         .get<{ data: PublicSalidaItem[] }>('/public/salidas?limit=100')
         .catch(() => ({ data: [] as PublicSalidaItem[] })),
     ])
-      .then(async ([page, salidasPage]) => {
+      .then(([page, salidasPage]) => {
         if (!active) return;
         setBoats(page.data);
 
@@ -404,33 +519,21 @@ export function LandingPage() {
         }
         setTripsByOperator(grouped);
 
-        const collected: ExperienceReview[] = [];
-        const byBoat: Record<string, ExperienceReview[]> = {};
-        for (const boat of page.data) {
-          if (!Array.isArray(boat.reviews)) continue;
-          const boatReviews: ExperienceReview[] = [];
-          for (const rev of boat.reviews) {
-            if (!rev.comment) continue;
-            const item: ExperienceReview = {
-              id: `${boat.id}-${rev.createdAt}`,
-              rating: rev.rating,
-              comment: rev.comment,
-              boatName: boat.nombre,
-              createdAt: rev.createdAt,
-            };
-            boatReviews.push(item);
-            collected.push(item);
-          }
-          if (boatReviews.length > 0) byBoat[boat.id] = boatReviews;
-        }
-
+        const { byBoat, collected } = indexBoatsWithReviews(page.data);
         if (collected.length > 0) {
           setReviewsByBoat(byBoat);
           setExperiences(shuffle(collected).slice(0, 6));
         }
       })
       .catch(() => {
-        if (active) setBoatsError(true);
+        if (!active) return;
+        setBoats(DEMO_BOATS);
+        setTripsByOperator(DEMO_TRIPS);
+        const { byBoat, collected } = indexBoatsWithReviews(DEMO_BOATS);
+        setReviewsByBoat(byBoat);
+        if (collected.length > 0) {
+          setExperiences(shuffle(collected).slice(0, 6));
+        }
       })
       .finally(() => {
         if (active) setLoadingBoats(false);
@@ -544,10 +647,6 @@ export function LandingPage() {
           {loadingBoats ? (
             <p className="nf-fleet-empty" role="status" aria-busy="true">
               <WavyLoader label="Cargando embarcaciones verificadas..." />
-            </p>
-          ) : boatsError ? (
-            <p className="nf-fleet-empty" role="status">
-              No pudimos cargar las embarcaciones. Volvé a intentarlo más tarde.
             </p>
           ) : boats.length ? (
             <>

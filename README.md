@@ -2,13 +2,17 @@
 
 Sistema de gestión para agencias de transporte privado de lanchas en el Delta del Tigre: flota, documentación, solicitudes de lancheros, viajes, retornos, reservas y reputación en una sola plataforma.
 
-**Aplicación en producción:** https://nautiflow-weld.vercel.app/
+[![Video explicativo del proyecto en YouTube](https://img.youtube.com/vi/Dxw0hlhlTE/hqdefault.jpg)](https://www.youtube.com/watch?v=Dxw0hlhlTE)
 
-> Simulación laboral abierta · NoCountry · Equipo 22 · G10 Latam
+**Demo en vivo:** https://nautiflow-nocontry.vercel.app/
+
+> **Modo demo:** el backend de la simulación (Render) fue desactivado tras la defensa del proyecto, por lo que la landing funciona con datos de ejemplo. Pasá el cursor sobre **"Próximos viajes"** en cualquier tarjeta de lancha para ver la micro-interacción de reseñas.
+
+> Simulación laboral abierta · NoCountry · Equipo 22 · G10 Latam · [Repositorio](https://github.com/IvanMR94/G10-Latam-Equipo22-NautiFlow)
 
 ## Guía rápida para el cliente
 
-No necesitás instalar nada: ingresá desde tu navegador a [NautiFlow](https://nautiflow-weld.vercel.app).
+No necesitás instalar nada: ingresá desde tu navegador a [NautiFlow](https://nautiflow-nocontry.vercel.app).
 
 | Paso | Qué hacer |
 | --- | --- |
@@ -66,12 +70,14 @@ Arquitectura: **monolito modular** → [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 ### Producción
 
-| Servicio | URL |
-| --- | --- |
-| Aplicación | https://nautiflow-weld.vercel.app |
-| API | https://nautiflow-backend.onrender.com/api/v1 |
-| Estado (health) | https://nautiflow-backend.onrender.com/api/v1/health |
-| Swagger | https://nautiflow-backend.onrender.com/api/docs |
+| Servicio | URL | Estado |
+| --- | --- | --- |
+| Aplicación (demo) | https://nautiflow-nocontry.vercel.app | ✅ Activa |
+| API | https://nautiflow-backend.onrender.com/api/v1 | ❌ Desactivada tras la simulación |
+| Estado (health) | https://nautiflow-backend.onrender.com/api/v1/health | ❌ Desactivada tras la simulación |
+| Swagger | https://nautiflow-backend.onrender.com/api/docs | ❌ Desactivada tras la simulación |
+
+> El repositorio conserva el backend completo (NestJS + Prisma) con su documentación y tests: para correrlo en local, ver [Para desarrolladores](#para-desarrolladores).
 
 ### Local
 
@@ -91,7 +97,7 @@ Git + Docker Desktop (o Node 20+ y PostgreSQL 16 para correr sin Docker).
 ### Instalación con Docker
 
 ```bash
-git clone https://github.com/No-Country-simulation/G10-Latam-Equipo22-NautiFlow.git
+git clone https://github.com/IvanMR94/G10-Latam-Equipo22-NautiFlow.git
 cd G10-Latam-Equipo22-NautiFlow
 cp .env.example .env        # Windows: Copy-Item .env.example .env
 docker compose up -d --build
@@ -239,4 +245,4 @@ Organización: NoCountry · Equipo 22 · G10 Latam.
 
 NautiFlow es parte de una simulación laboral abierta de NoCountry, con foco en buenas prácticas de ingeniería: control de versiones, revisión por PR, testing y despliegue continuo.
 
-**Aplicación:** https://nautiflow-weld.vercel.app/ · **Repositorio:** [G10-Latam-Equipo22-NautiFlow](https://github.com/No-Country-simulation/G10-Latam-Equipo22-NautiFlow)
+**Demo:** https://nautiflow-nocontry.vercel.app/ · **Repositorio:** [IvanMR94/G10-Latam-Equipo22-NautiFlow](https://github.com/IvanMR94/G10-Latam-Equipo22-NautiFlow)
