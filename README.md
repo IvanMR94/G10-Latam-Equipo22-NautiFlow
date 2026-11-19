@@ -4,7 +4,7 @@ Sistema de gestión para agencias de transporte privado de lanchas en el Delta d
 
 [![Video explicativo del proyecto en YouTube](https://img.youtube.com/vi/Dxw0hlhlTE/hqdefault.jpg)](https://www.youtube.com/watch?v=Dxw0hlhlTE)
 
-**Demo en vivo:** https://nautiflow-nocontry.vercel.app/
+**Demo en vivo:** https://proyecto-nautiflow-nocountry.vercel.app/
 
 > **Modo demo:** el backend de la simulación (Render) fue desactivado tras la defensa del proyecto, por lo que la landing funciona con datos de ejemplo. Pasá el cursor sobre **"Próximos viajes"** en cualquier tarjeta de lancha para ver la micro-interacción de reseñas.
 
@@ -12,7 +12,7 @@ Sistema de gestión para agencias de transporte privado de lanchas en el Delta d
 
 ## Guía rápida para el cliente
 
-No necesitás instalar nada: ingresá desde tu navegador a [NautiFlow](https://nautiflow-nocontry.vercel.app).
+No necesitás instalar nada: ingresá desde tu navegador a [NautiFlow](https://proyecto-nautiflow-nocountry.vercel.app).
 
 | Paso | Qué hacer |
 | --- | --- |
@@ -72,7 +72,7 @@ Arquitectura: **monolito modular** → [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 | Servicio | URL | Estado |
 | --- | --- | --- |
-| Aplicación (demo) | https://nautiflow-nocontry.vercel.app | ✅ Activa |
+| Aplicación (demo) | https://proyecto-nautiflow-nocountry.vercel.app | ✅ Activa |
 | API | https://nautiflow-backend.onrender.com/api/v1 | ❌ Desactivada tras la simulación |
 | Estado (health) | https://nautiflow-backend.onrender.com/api/v1/health | ❌ Desactivada tras la simulación |
 | Swagger | https://nautiflow-backend.onrender.com/api/docs | ❌ Desactivada tras la simulación |
@@ -245,4 +245,4 @@ Organización: NoCountry · Equipo 22 · G10 Latam.
 
 NautiFlow es parte de una simulación laboral abierta de NoCountry, con foco en buenas prácticas de ingeniería: control de versiones, revisión por PR, testing y despliegue continuo.
 
-**Demo:** https://nautiflow-nocontry.vercel.app/ · **Repositorio:** [IvanMR94/G10-Latam-Equipo22-NautiFlow](https://github.com/IvanMR94/G10-Latam-Equipo22-NautiFlow)
+**Demo:** https://proyecto-nautiflow-nocountry.vercel.app/ · **Repositorio:** [IvanMR94/G10-Latam-Equipo22-NautiFlow](https://github.com/IvanMR94/G10-Latam-Equipo22-NautiFlow)
