@@ -2,7 +2,7 @@
 
 Sistema de gestión para agencias de transporte privado de lanchas en el Delta del Tigre: flota, documentación, solicitudes de lancheros, viajes, retornos, reservas y reputación en una sola plataforma.
 
-[![Video explicativo del proyecto en YouTube](https://img.youtube.com/vi/Dxw0hlhlTE/hqdefault.jpg)](https://www.youtube.com/watch?v=Dxw0hlhlTE)
+Video explicativo del proyecto en YouTube: ([https://www.youtube.com/watch?v=Dxw0hlhlTE](https://www.youtube.com/watch?v=VxDw0hlhlTE))
 
 **Demo en vivo:** https://proyecto-nautiflow-nocountry.vercel.app/
 
